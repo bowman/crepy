@@ -7,7 +7,7 @@
 (defn ^:dev/after-load start []
   (js/console.log "start"))
 
-(defn init []
+(defn ^:export init []
   ;; init is called ONCE when the page loads
   ;; this is called in the index.html and must be exported
   ;; so it is available even in :advanced release builds
