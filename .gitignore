@@ -1,4 +1,5 @@
 node_modules/
+# https://stackoverflow.com/a/68404380/1462529
 public/js
 
 /target
