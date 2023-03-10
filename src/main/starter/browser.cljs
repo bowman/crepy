@@ -14,7 +14,7 @@
   (js/console.log "init")
   (let [app-node (.getElementById js/document "app")
         root (react-dom/createRoot app-node)]
-    (.render root "Hello Tycho!" app-node))
+    (.render root "Hello World"))
   (start))
 
 ;; this is called before any code is reloaded
