@@ -15,9 +15,8 @@
   (js/console.log "start")
   (rdomc/render app-root
                 [:div
-                 [:h1 "Hello World"]
-                 [:img {:src "/images/closed.jpg" :width 200}]
-                 [:p "bye"]]))
+                 [:img {:src "/images/closed.jpg" :width 300}]
+                 ]))
 
 (defn ^:export init []
   ;; init is called ONCE when the page loads
