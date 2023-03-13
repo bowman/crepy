@@ -37,10 +37,15 @@
       (swap! db #(assoc % :dir new-dir))))
   )
 
+(defn keyup [e]
+  ;; (js/console.log e)
+  (swap! db #(assoc % :dir :none)))
+
 ;; start is called by init and after code reloading finishes
 (defn ^:dev/after-load start []
   (js/console.log "start" db)
   (set! (.-onkeydown js/document) keydown)
+  (set! (.-onkeyup js/document) keyup)
   (rdomc/render app-root [boo]))
 
 (defn ^:export init []
