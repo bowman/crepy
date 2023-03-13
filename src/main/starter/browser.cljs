@@ -1,22 +1,47 @@
 (ns starter.browser
   (:require
-  ;;  ["react" :as react]
-  ;;  [reagent.core :as r]
-  ;;  [reagent.dom :as rdom]
+   [reagent.core :as reagent]
    [reagent.dom.client :as rdomc]
-  ;;  ["react-dom/client" :as react-dom]
    ))
 
-;; (defonce root (createRoot (gdom/getElement "app")))
 (defonce app-root (rdomc/create-root (.getElementById js/document "app")))
+(defonce db (reagent/atom {:dir :none}))
+
+(def dir2fn
+  {:none "closed"
+   :left "left"
+   :right "right"
+   :up "up"
+   :down "down"})
+
+(defn boo []
+  [:div
+   [:img {:src ;"/images/closed.jpg"
+          (str "/images/" (dir2fn (:dir @db)) ".jpg")
+          :width 300
+          :on-click (fn [e]
+                      (js/console.log e)
+                      (js/console.log db))
+          }]])
+
+(defn keydown [e]
+  ;; (js/console.log e)
+  (let [key->dir {"ArrowUp" :up
+                  "ArrowDown" :down
+                  "ArrowLeft" :left
+                  "ArrowRight" :right}
+        key (-> e .-key)
+        new-dir (key->dir key)]
+    (when new-dir
+      (js/console.log new-dir)
+      (swap! db #(assoc % :dir new-dir))))
+  )
 
 ;; start is called by init and after code reloading finishes
 (defn ^:dev/after-load start []
-  (js/console.log "start")
-  (rdomc/render app-root
-                [:div
-                 [:img {:src "/images/closed.jpg" :width 300}]
-                 ]))
+  (js/console.log "start" db)
+  (set! (.-onkeydown js/document) keydown)
+  (rdomc/render app-root [boo]))
 
 (defn ^:export init []
   ;; init is called ONCE when the page loads
