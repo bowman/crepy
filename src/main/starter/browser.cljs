@@ -29,27 +29,32 @@
   (note-hz 7) ; C5=523.2511
   :rcf)
 
-(defn- start-sound [_]
-  ;; (when-not (:ac @db)
-  ;;   (swap! db #(assoc db :ac (new js/window.AudioContext))))
+(defn dir2note [dir]
+  (note-hz
+   (dir {:down  0
+         :left  1
+         :up    2
+         :right 3})))
+
+(defn- start-sound [note]
   (when-not (:audio-context @db)
     (let [audio-context (new js/window.AudioContext)
           tone-node (new js/window.OscillatorNode audio-context)]
-      ;; (.connect tone-node (.-destination audio-context))
       (.start tone-node)
       (swap! db #(assoc % :tone tone-node :audio-context audio-context))))
 
   (let [audio-context  (:audio-context @db)
+        audio-state (.-state audio-context)
         tone (:tone @db)
-        audio-state (.-state audio-context)]
+        freq (.-frequency tone)
+        ]
     (when (= audio-state "suspended") ; start or wake-up
-      (.resume audio-context)) 
+      (.resume audio-context))
+    (set! (.value freq) note)
     (.connect tone (.-destination audio-context)))
-  ;; (.start (:tone @db))
   )
 
 (defn- stop-sound []
-  ;; (.stop (:tone @db))
    (let [audio-context  (:audio-context @db)
          tone (:tone @db)]
      (.disconnect tone (.-destination audio-context)))
@@ -75,7 +80,7 @@
         new-dir (key->dir key)]
     (when new-dir
       (js/console.log new-dir)
-      (start-sound new-dir)
+      (start-sound (dir2note new-dir))
       (swap! db #(assoc % :dir new-dir))))
   )
 
