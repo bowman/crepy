@@ -6,6 +6,7 @@
 
 (defonce app-root (rdomc/create-root (.getElementById js/document "app")))
 (defonce db (reagent/atom {:dir :none}))
+(def log js/console.log)
 
 (def dir2fn
   {:none "closed"
@@ -42,8 +43,7 @@
 (defn- setup-notes-rec [audio-context note notes]
   (let [tone (new js/window.OscillatorNode audio-context #js {"frequency" (note-hz note)})
         gain (new js/window.GainNode audio-context #js {"gain" 0})]
-    ; tone -> gain -> destination
-    ;(.connect tone (.connect gain (.-destination audio-context)))
+    ; tone -> gain -> destination (separately!)
     (.connect tone gain)
     (.connect gain (.-destination audio-context))
     (.start tone) ; always play, control with gain
@@ -86,8 +86,8 @@
           (str "/images/" (dir2fn (:dir @db)) ".jpg")
           :width "100%"
           :on-click (fn [e]
-                      (js/console.log e)
-                      (js/console.log db))
+                      (log e)
+                      (log db))
           }]])
 
 (def key->dir
@@ -97,7 +97,6 @@
    "ArrowRight" :right})
 
 (defn keydown [e]
-  (js/console.log e)
   (.preventDefault e)
   (let [key (.-key e)
         shift-key (.-shiftKey e)
@@ -108,7 +107,6 @@
   )
 
 (defn keyup [e]
-  ;; (js/console.log e)
   (.preventDefault e)
   (let [key (-> e .-key)
         shift-key (.-shiftKey e)
@@ -119,7 +117,6 @@
 
 ;; start is called by init and after code reloading finishes
 (defn ^:dev/after-load start []
-  ;; (js/console.log "start" db)
   (set! (.-onkeydown js/document) keydown)
   (set! (.-onkeyup js/document) keyup)
 
@@ -129,13 +126,15 @@
   ;; init is called ONCE when the page loads
   ;; this is called in the index.html and must be exported
   ;; so it is available even in :advanced release builds
-  (js/console.log "init")
+  (log "init")
   (start))
 
 ;; this is called before any code is reloaded
 (defn ^:dev/before-load stop []
-  ;; TODO tear-down audio-context?
-  (js/console.log "stop"))
+  (let [{audio-context :audio-context} @db]
+    (when audio-context
+      (.close audio-context))) ; release audio system resources?
+  (log "stop" @db))
 
 (comment
   (def nn ((:notes @db) 0))
