@@ -127,13 +127,15 @@
   ;; this is called in the index.html and must be exported
   ;; so it is available even in :advanced release builds
   (log "init")
+  
   (start))
 
 ;; this is called before any code is reloaded
 (defn ^:dev/before-load stop []
   (let [{audio-context :audio-context} @db]
     (when audio-context
-      (.close audio-context))) ; release audio system resources?
+      (.close audio-context)
+      (reset! db {:dir :none}))) ; release audio system resources?
   (log "stop" @db))
 
 (comment
