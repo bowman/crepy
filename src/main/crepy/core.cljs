@@ -1,4 +1,4 @@
-(ns starter.browser
+(ns crepy.core
   (:require
    [reagent.core :as reagent]
    [reagent.dom.client :as rdomc]

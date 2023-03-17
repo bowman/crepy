@@ -19,4 +19,4 @@
 
    :modules
    {:main ; becomes public/js/main.js
-    {:init-fn starter.browser/init}}}}}
+    {:init-fn crepy.core/init}}}}}
