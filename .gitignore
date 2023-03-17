@@ -12,13 +12,12 @@ pom.xml.asc
 *.jar
 *.log
 .shadow-cljs
-.idea
 .lein-*
 .nrepl-*
-.DS_Store
 
 .calva/
 .lsp/
+.clj-kondo/
 .clj-kondo/.cache/
 
 .hgignore
