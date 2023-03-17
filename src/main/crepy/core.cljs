@@ -127,7 +127,6 @@
   ;; this is called in the index.html and must be exported
   ;; so it is available even in :advanced release builds
   (log "init")
-  
   (start))
 
 ;; this is called before any code is reloaded
