@@ -83,7 +83,7 @@
 (defn app []
   [:div
    [:img {:src ;"/images/closed.jpg"
-          (str "/images/" (dir2fn (:dir @db)) ".jpg")
+          (str "images/" (dir2fn (:dir @db)) ".jpg")
           :width "100%"
           :on-click (fn [e]
                       (log e)
