@@ -82,30 +82,39 @@
 
 (defn log-touch [e]
   (log e)
-  (log (.-touches e))
   (log (.-changedTouches e))
+  (log (.-target e))
   (.stopPropagation e)
   )
+(defn start-touch [dir]
+  (fn [e]
+    (log "Start "dir)
+    (start-sound (dir->note dir (.-shiftKey e)))
+    (swap! db #(assoc % :dir dir))
+    #_(log-touch e)))
+(defn end-touch [dir]
+  (fn [e]
+    (log "end" dir)
+    (stop-sound (dir->note dir (.-shiftKey e)))
+      (swap! db #(assoc % :dir :none))
+    #_(log-touch e)))
 
 (defn app []
   [:div {:id "div-img"}
-   [:img {:src
-          (str "images/" (dir2fn (:dir @db)) ".jpg")
-          :class "crepe"
-          ;; :on-touch-start (fn [e] (.preventDefault e) (log e))
-          ;; :on-click (fn [e] (log e))
-          :on-touch-start log-touch
-          :on-touch-end log-touch
-          }]
-  [:svg {:view-box "0 0 756 1008"}
-   [:circle {:cx 580 :cy 230 :r 90 :fill "orange"}]
-   [:rect {:x 376 :y 600 :width 300 :height 300 :fill "green" :transform "rotate(45, 376, 600)"}]
-   [:rect {:x 376 :y 600 :width 300 :height 300 :fill "blue" :transform "rotate(135, 376, 600)"}]
-   [:rect {:x 376 :y 600 :width 300 :height 300 :fill "red" :transform "rotate(225, 376, 600)"}]
-   [:rect {:x 376 :y 600 :width 300 :height 300 :fill "purple" :transform "rotate(315, 376, 600)"}]
-   [:circle {:cx 376 :cy 600 :r 90 :fill "yellow"}]]
+   [:img {:src (str "images/" (dir2fn (:dir @db)) ".jpg")
+          :class "crepe" }]
+  [:svg {:view-box "0 0 756 1008"}:on-touch-start log-touch
+   [:circle {:id "oj" :on-touch-start log-touch :cx 580 :cy 230 :r 90 :fill "orange"}]
+   [:rect {:id "r-down"  :on-touch-start (start-touch :down) :on-touch-end (end-touch :down)
+           :x 376 :y 600 :width 300 :height 300 :fill "green" :transform "rotate(45, 376, 600)"}]
+   [:rect {:id "r-left"  :on-touch-start (start-touch :left) :on-touch-end (end-touch :left)
+           :x 376 :y 600 :width 300 :height 300 :fill "blue" :transform "rotate(135, 376, 600)"}]
+   [:rect {:id "r-up"    :on-touch-start (start-touch :up) :on-touch-end (end-touch :up)
+           :x 376 :y 600 :width 300 :height 300 :fill "red" :transform "rotate(225, 376, 600)"}]
+   [:rect {:id "r-right" :on-touch-start (start-touch :right) :on-touch-end (end-touch :right)
+           :x 376 :y 600 :width 300 :height 300 :fill "purple" :transform "rotate(315, 376, 600)"}]
+   [:circle {:id "egg" :on-touch-start log-touch :cx 376 :cy 600 :r 90 :fill "yellow"}]]
    ])
-;  <rect width="300" height="100" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" />
 
 
 (def key->dir
