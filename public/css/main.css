@@ -10,6 +10,19 @@ div#app {
     justify-content: center;
 }
 
+div#div-img {
+    position: relative;
+    /* overflow: hidden; */
+    display: inline-block;
+}
+
+div#div-img svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 50%;
+}
+
 img.crepe {
     display: block;
     height: auto;
