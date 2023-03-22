@@ -2,3 +2,31 @@ body {
     background-color: black;
     color: white;
 }
+
+div#app {
+    display: flex;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+}
+
+div#div-img {
+    position: relative;
+    /* overflow: hidden; */
+    display: inline-block;
+}
+
+div#div-img svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0%;
+}
+
+img.crepe {
+    display: block;
+    height: auto;
+    max-width: 100%;
+    max-height: 100vh;
+    margin: auto;
+}
